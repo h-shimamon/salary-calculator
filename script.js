@@ -42,8 +42,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         const appContainer = document.querySelector('.app-container');
         inputScreen.classList.add('hidden');
         resultsScreen.classList.remove('hidden');
-
     });
+    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼ ここにコードを貼り付けます ▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+    // --- STEP4: 金額入力欄のフォーマット機能 ---
+    const amountInputIds = ['basic-salary', 'transportation-cost', 'overtime-pay', 'resident-tax'];
+
+    amountInputIds.forEach(id => {
+        const element = document.getElementById(id);
+
+        // フォーカスが当たった時：カンマを削除して入力しやすくする
+        element.addEventListener('focus', (e) => {
+            if (e.target.value) {
+                e.target.value = e.target.value.replace(/,/g, '');
+            }
+        });
+
+        // フォーカスが外れた時：カンマを付けて見やすくする
+        element.addEventListener('blur', (e) => {
+            const value = e.target.value;
+            // 値が空でなく、数字として有効な場合のみフォーマット
+            if (value && !isNaN(Number(value.replace(/,/g, '')))) {
+                e.target.value = Number(value.replace(/,/g, '')).toLocaleString('ja-JP');
+            }
+        });
+    });
+
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲ ここまで ▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     // --- メインの計算処理 ---
     function calculateAndDisplay() {
@@ -51,10 +76,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ageGroup = document.getElementById('age-group').value;
         const location = document.getElementById('work-location').value;
         const dependents = parseInt(document.getElementById('dependents').value) || 0;
-        const basicSalary = parseInt(document.getElementById('basic-salary').value) || 0;
-        const overtimePay = parseInt(document.getElementById('overtime-pay').value) || 0;
-        const transportationCost = parseInt(document.getElementById('transportation-cost').value) || 0;
-        const residentTax = parseInt(document.getElementById('resident-tax').value) || 0;
+        // ▼▼▼ ここから修正 ▼▼▼
+        // カンマを除去して数値に変換するヘルパー関数
+        const getNumericValue = (id) => {
+            const value = document.getElementById(id).value.replace(/,/g, '');
+            return parseInt(value, 10) || 0;
+        };
+        
+        const basicSalary = getNumericValue('basic-salary');
+        const overtimePay = getNumericValue('overtime-pay');
+        const transportationCost = getNumericValue('transportation-cost');
+        const residentTax = getNumericValue('resident-tax');
+        // ▲▲▲ ここまで修正 ▲▲▲
 
         // --- 2. 社会保険料の計算 ---
         // 標準報酬月額の基準となる給与額を計算 (交通費も含む)
