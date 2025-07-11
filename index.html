@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <!-- CSSファイルを読み込む -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div class="app-container">
@@ -63,7 +65,7 @@
                         <option value="7">7人以上</option>
                     </select>
                 </div>
-                 <div class="input-group">
+                <div class="input-group">
                     <label for="resident-tax">住民税（前年の所得から算出）</label>
                     <input type="number" id="resident-tax" placeholder="例: 20000">
                 </div>
@@ -75,8 +77,9 @@
         <!-- 結果画面 -->
         <div id="results-screen" class="screen hidden">
             <button id="back-button" class="back-button">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                 </svg>
                 入力に戻る
             </button>
@@ -122,7 +125,7 @@
             </div>
             <div class="results-section">
                 <h3>税金</h3>
-                 <div class="result-item">
+                <div class="result-item">
                     <span class="label">源泉所得税</span>
                     <div id="income-tax" class="value">¥ 0</div>
                 </div>
@@ -133,7 +136,7 @@
             </div>
         </div>
     </div>
-    <!-- JavaScriptファイルを読み込む -->
-    <script src="script.js"></script>
+<script src="script.js?v=final_check_2024"></script>
 </body>
+
 </html>

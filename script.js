@@ -66,28 +66,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 健康保険料の計算
         const healthInsuranceRate = insuranceData.prefectures[location].healthInsuranceRate / 100;
-        const healthInsurancePremium = Math.floor(standardRemuneration * healthInsuranceRate / 2);
+        const healthInsurancePremium = roundForSocialInsurance(standardRemuneration * healthInsuranceRate / 2); 
 
         // 介護保険料の計算 (40歳～64歳が対象)
         let careInsurancePremium = 0;
         if (ageGroup === '40to64') {
             const careInsuranceRate = insuranceData.prefectures[location].careInsuranceRate / 100;
-            careInsurancePremium = Math.floor(standardRemuneration * careInsuranceRate / 2);
+            careInsurancePremium = roundForSocialInsurance(standardRemuneration * careInsuranceRate / 2); 
         }
 
         // 厚生年金保険料の計算
+        // 厚生年金の標準報酬月額には上限(650,000円)があるため、それを適用する
+        const pensionStandardRemuneration = Math.min(standardRemuneration, 650000);
+        
         const pensionRate = insuranceData.pensionRate / 100;
-        const pensionInsurancePremium = Math.floor(standardRemuneration * pensionRate / 2);
+        // 厚生年金は四捨五入(Math.round)で計算する
+        const pensionInsurancePremium = Math.round(pensionStandardRemuneration * pensionRate / 2);
 
         // 雇用保険料の計算 (交通費も含む課税対象額で計算)
         const employmentInsuranceTarget = basicSalary + overtimePay + transportationCost;
         const employmentInsuranceRate = insuranceData.employmentInsuranceRate / 100;
-        const employmentInsurancePremium = Math.floor(employmentInsuranceTarget * employmentInsuranceRate);
-        
+        const employmentInsurancePremium = Math.floor(employmentInsuranceTarget * employmentInsuranceRate); // 
+
         // --- 3. 税金の計算 ---
         const socialInsuranceTotal = healthInsurancePremium + careInsurancePremium + pensionInsurancePremium;
         // 課税対象額 = (基本給 + 残業代) - 社会保険料合計
-        const taxableSalary = (basicSalary + overtimePay) - socialInsuranceTotal;
+        const taxableSalary = (basicSalary + overtimePay) - (socialInsuranceTotal + employmentInsurancePremium);
+
+        console.log('【確認用】課税対象額:', taxableSalary);
+        console.log('【確認用】扶養人数:', dependents);
+
         // 所得税を税額表から取得
         const incomeTax = getIncomeTax(taxableSalary, dependents);
 
@@ -111,16 +119,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('pension-insurance').textContent = formatCurrency(pensionInsurancePremium);
         document.getElementById('pension-insurance-sub').textContent = `等級: ${remunerationTier.grade} / 標準報酬: ${formatCurrency(standardRemuneration, '')}`;
         document.getElementById('employment-insurance').textContent = formatCurrency(employmentInsurancePremium);
-        
+
         document.getElementById('income-tax').textContent = formatCurrency(incomeTax);
         document.getElementById('resident-tax-result').textContent = formatCurrency(residentTax);
     }
 
     // --- ヘルパー関数 (補助的な機能) ---
 
+    // 法律(50銭以下切り捨て、50銭超切り上げ)に準拠したカスタム丸め関数
+    function roundForSocialInsurance(value) {
+        // 小数点以下の値を取得（浮動小数点誤差を避けるため少し工夫）
+        const fraction = parseFloat((value - Math.floor(value)).toPrecision(10));
+
+        if (fraction > 0.5) {
+            return Math.ceil(value); // 0.5を超えたら切り上げ
+        } else {
+            return Math.floor(value); // 0.5以下なら切り捨て
+        }
+    }
+
     // 給与額から標準報酬月額の等級を取得する関数
     function getStandardRemuneration(salary) {
-        const tier = insuranceData.standardRemunerationTiers.find(t => 
+        const tier = insuranceData.standardRemunerationTiers.find(t =>
             salary >= t.minSalary && salary < t.maxSalary
         );
         // もし該当する等級がなければ、最後の等級を返す
@@ -130,11 +150,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 課税対象額と扶養人数から所得税を取得する関数
     function getIncomeTax(taxableSalary, dependents) {
         if (taxableSalary < 0) return 0; // 課税対象額がマイナスなら0
-        const tier = taxTableData.monthly.find(t => 
+        const tier = taxTableData.monthly.find(t =>
             taxableSalary >= t.min && taxableSalary < t.max
         );
         if (!tier) {
-             // 範囲外（高額所得者）の場合は、最後の等級の税額を返す（簡易的な対応）
+            // 範囲外（高額所得者）の場合は、最後の等級の税額を返す（簡易的な対応）
             const lastTier = taxTableData.monthly[taxTableData.monthly.length - 1];
             const dependentIndex = Math.min(dependents, 7);
             return lastTier.tax[dependentIndex] || 0;
