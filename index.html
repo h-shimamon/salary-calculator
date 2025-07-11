@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>給与計算</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSSファイルを読み込む -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- 入力画面 -->
+        <div id="input-screen" class="screen">
+            <h1>給与計算</h1>
+            <section>
+                <h2>基本情報</h2>
+                <div class="input-group">
+                    <label for="age-group">年齢</label>
+                    <select id="age-group">
+                        <option value="under39">39歳以下</option>
+                        <option value="40to64">40歳〜64歳</option>
+                        <option value="over65">65歳以上</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="work-location">就業地（都道府県）</label>
+                    <select id="work-location">
+                        <!-- 都道府県はJSで動的に生成 -->
+                    </select>
+                </div>
+            </section>
+            <section>
+                <h2>支給項目</h2>
+                <div class="input-group">
+                    <label for="basic-salary">基本給</label>
+                    <input type="number" id="basic-salary" placeholder="例: 300000">
+                </div>
+                <div class="input-group">
+                    <label for="transportation-cost">交通費(非課税)</label>
+                    <input type="number" id="transportation-cost" placeholder="例: 15000">
+                </div>
+                <div class="input-group">
+                    <label for="overtime-pay">月想定残業代(課税)</label>
+                    <input type="number" id="overtime-pay" placeholder="例: 50000">
+                </div>
+            </section>
+            <section>
+                <h2>控除項目</h2>
+                <div class="input-group">
+                    <label for="dependents">扶養親族の数</label>
+                    <select id="dependents">
+                        <option value="0">0人</option>
+                        <option value="1">1人</option>
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                        <option value="4">4人</option>
+                        <option value="5">5人</option>
+                        <option value="6">6人</option>
+                        <option value="7">7人以上</option>
+                    </select>
+                </div>
+                 <div class="input-group">
+                    <label for="resident-tax">住民税（前年の所得から算出）</label>
+                    <input type="number" id="resident-tax" placeholder="例: 20000">
+                </div>
+            </section>
+            <div class="button-container">
+                <button id="calculate-button" class="primary-button">計算する</button>
+            </div>
+        </div>
+        <!-- 結果画面 -->
+        <div id="results-screen" class="screen hidden">
+            <button id="back-button" class="back-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                入力に戻る
+            </button>
+            <h1>計算結果</h1>
+            <div class="results-overview">
+                <div class="overview-item">
+                    <div class="label">総支給額</div>
+                    <div id="gross-salary" class="value">¥ 0</div>
+                </div>
+                <div class="overview-item">
+                    <div class="label">控除額合計</div>
+                    <div id="total-deductions" class="value">¥ 0</div>
+                </div>
+                <div class="overview-item final-total">
+                    <div class="label">差引支給額 (手取り)</div>
+                    <div id="net-salary-total" class="value">¥ 0</div>
+                </div>
+            </div>
+            <div class="results-section">
+                <h3>社会保険料</h3>
+                <div class="result-item">
+                    <span class="label">健康保険料</span>
+                    <div class="value-group">
+                        <div id="health-insurance" class="value">¥ 0</div>
+                        <div id="health-insurance-sub" class="sub-value"></div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span class="label">介護保険料</span>
+                    <div id="care-insurance" class="value">¥ 0</div>
+                </div>
+                <div class="result-item">
+                    <span class="label">厚生年金保険料</span>
+                    <div class="value-group">
+                        <div id="pension-insurance" class="value">¥ 0</div>
+                        <div id="pension-insurance-sub" class="sub-value"></div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span class="label">雇用保険料</span>
+                    <div id="employment-insurance" class="value">¥ 0</div>
+                </div>
+            </div>
+            <div class="results-section">
+                <h3>税金</h3>
+                 <div class="result-item">
+                    <span class="label">源泉所得税</span>
+                    <div id="income-tax" class="value">¥ 0</div>
+                </div>
+                <div class="result-item">
+                    <span class="label">住民税</span>
+                    <div id="resident-tax-result" class="value">¥ 0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScriptファイルを読み込む -->
+    <script src="script.js"></script>
+</body>
+</html>
