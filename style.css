@@ -30,6 +30,8 @@ body {
     width: 100%;
     max-width: 520px;
     overflow: hidden;
+    display: grid;
+    /* この行を追加 */
 }
 
 .screen {
@@ -39,10 +41,11 @@ body {
     padding: 24px 28px 32px;
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease-out;
     will-change: transform, opacity;
+    grid-area: 1 / 1; /* この行を追加 */
 }
 
 .screen.hidden {
-    position: absolute;
+
     opacity: 0;
     transform: translateX(100%);
     pointer-events: none;
@@ -134,12 +137,13 @@ select:focus {
 .primary-button:hover {
     background-color: var(--accent-hover-color);
 }
+
 .primary-button:active {
     transform: scale(0.98);
 }
 
 #results-screen h1 {
-     margin-bottom: 24px;
+    margin-bottom: 24px;
 }
 
 .results-overview {
@@ -147,21 +151,25 @@ select:focus {
     padding-bottom: 24px;
     border-bottom: 1px solid var(--divider-color);
 }
+
 .overview-item {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     padding: 8px 0;
 }
+
 .overview-item .label {
     font-size: 16px;
     color: var(--secondary-text-color);
 }
+
 .overview-item .value {
     font-size: 20px;
     font-weight: 600;
     color: var(--primary-text-color);
 }
+
 .overview-item.final-total {
     flex-direction: column;
     align-items: center;
@@ -169,10 +177,12 @@ select:focus {
     padding-top: 24px;
     border-top: 1px solid var(--divider-color);
 }
+
 .overview-item.final-total .label {
     font-size: 18px;
     font-weight: 500;
 }
+
 .overview-item.final-total .value {
     font-size: 40px;
     font-weight: 700;
@@ -197,13 +207,16 @@ select:focus {
     padding: 14px 0;
     border-bottom: 1px solid #e5e5e5;
 }
+
 .result-item:last-child {
     border-bottom: none;
 }
+
 .result-item .label {
     font-size: 16px;
     color: var(--secondary-text-color);
 }
+
 .result-item .value {
     font-size: 16px;
     font-weight: 500;
@@ -233,6 +246,7 @@ select:focus {
     padding: 8px 0;
     margin-bottom: 16px;
 }
+
 .back-button svg {
     width: 18px;
     height: 18px;

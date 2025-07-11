@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const appContainer = document.querySelector('.app-container');
         inputScreen.classList.add('hidden');
         resultsScreen.classList.remove('hidden');
-        appContainer.style.height = `${resultsScreen.offsetHeight}px`;
+
     });
 
     // --- メインの計算処理 ---
@@ -175,11 +175,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const backButton = document.getElementById('back-button');
     const inputScreen = document.getElementById('input-screen');
     const resultsScreen = document.getElementById('results-screen');
-    const appContainer = document.querySelector('.app-container');
+
     backButton.addEventListener('click', () => {
         resultsScreen.classList.add('hidden');
         inputScreen.classList.remove('hidden');
-        appContainer.style.height = `${inputScreen.offsetHeight}px`;
+
     });
-    appContainer.style.height = `${inputScreen.offsetHeight}px`;
+
 });
