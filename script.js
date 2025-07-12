@@ -42,8 +42,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const appContainer = document.querySelector('.app-container');
         inputScreen.classList.add('hidden');
         resultsScreen.classList.remove('hidden');
+
+        // ★ 修正点: 結果表示時に画面上部にスムーズにスクロール
+        appContainer.scrollIntoView({ behavior: 'smooth' });
     });
-    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼ ここにコードを貼り付けます ▼▼▼▼▼▼▼▼▼▼▼▼▼▼
 
     // --- STEP4: 金額入力欄のフォーマット機能 ---
     const amountInputIds = ['basic-salary', 'transportation-cost', 'overtime-pay', 'resident-tax'];
@@ -68,15 +70,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲ ここまで ▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
     // --- メインの計算処理 ---
     function calculateAndDisplay() {
         // --- 1. 入力値の取得 ---
         const ageGroup = document.getElementById('age-group').value;
         const location = document.getElementById('work-location').value;
         const dependents = parseInt(document.getElementById('dependents').value) || 0;
-        // ▼▼▼ ここから修正 ▼▼▼
         // カンマを除去して数値に変換するヘルパー関数
         const getNumericValue = (id) => {
             const value = document.getElementById(id).value.replace(/,/g, '');
@@ -87,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const overtimePay = getNumericValue('overtime-pay');
         const transportationCost = getNumericValue('transportation-cost');
         const residentTax = getNumericValue('resident-tax');
-        // ▲▲▲ ここまで修正 ▲▲▲
 
         // --- 2. 社会保険料の計算 ---
         // 標準報酬月額の基準となる給与額を計算 (交通費も含む)
@@ -204,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    // --- 戻るボタンの処理 (変更なし) ---
+    // --- 戻るボタンの処理 ---
     const backButton = document.getElementById('back-button');
     const inputScreen = document.getElementById('input-screen');
     const resultsScreen = document.getElementById('results-screen');
@@ -213,6 +211,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         resultsScreen.classList.add('hidden');
         inputScreen.classList.remove('hidden');
 
+        // ★ 追加: 入力画面に戻る際も画面上部にスムーズにスクロール
+        document.querySelector('.app-container').scrollIntoView({ behavior: 'smooth' });
     });
 
 });
